@@ -6,7 +6,7 @@ import com.habin.marketboro_mileage_task.common.ApiResponse;
 import com.habin.marketboro_mileage_task.dto.MileageListResponseDto;
 import com.habin.marketboro_mileage_task.dto.MileageRequestDto;
 import com.habin.marketboro_mileage_task.dto.TotalMileageResponseDto;
-import com.habin.marketboro_mileage_task.entity.MileageType;
+import com.habin.marketboro_mileage_task.entity.enums.MileageStatus;
 import com.habin.marketboro_mileage_task.service.MileageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -39,7 +39,7 @@ public class MileageController {
     @GetMapping
     public ResponseEntity<ApiResponse<SerializablePage<MileageListResponseDto>>> getMileageList(
             @RequestParam(name = "memberNo", required = false) String memberNo,
-            @RequestParam(name = "type", required = false) MileageType mileageType,
+            @RequestParam(name = "type", required = false) MileageStatus mileageStatus,
             @RequestParam(name = "page", required = false)
             @Min(message = "페이지 번호는 1 이상으로 입력해주세요.", value = 1)
             @Max(message = "페이지 번호 최댓값을 초과했습니다.", value = Integer.MAX_VALUE)
@@ -48,7 +48,7 @@ public class MileageController {
             @Min(message = "페이지 크기는 10 이상으로 입력해주세요.", value = 10)
             @Max(message = "페이지 크기 최댓값을 초과했습니다.", value = Integer.MAX_VALUE)
             Integer size) {
-        return mileageService.getMileageList(memberNo, mileageType, page, size);
+        return mileageService.getMileageList(memberNo, mileageStatus, page, size);
     }
 
     @Tag(name = "적립금 관리", description = "적립금 관리 API")

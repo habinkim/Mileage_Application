@@ -37,12 +37,8 @@ public class Member extends BaseTimeEntity {
     @Comment("회원명")
     private String memberNm;
 
-    @Column(nullable = false, length = 10)
-    @Comment("보유 적립액")
-    private Integer totalMileageAmount;
-
     @Builder.Default
     @OneToMany(mappedBy = "member")
-    private List<Mileage> mileage = new ArrayList<>();
+    private List<MileageEvent> mileageEvent = new ArrayList<>();
 
 }

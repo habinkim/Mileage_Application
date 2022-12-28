@@ -1,7 +1,5 @@
 package com.habin.marketboro_mileage_task.module.mapper;
 
-import com.habin.marketboro_mileage_task.dto.SignUpRequestDto;
-import com.habin.marketboro_mileage_task.entity.Member;
 import com.habin.marketboro_mileage_task.module.mapper.base.EntityMapper;
 import org.mapstruct.*;
 
@@ -13,10 +11,8 @@ import org.mapstruct.*;
 		nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS,
 		nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE
 )
-public interface MemberMapper {
+public interface MileageDetailMapper {
 
-    @Mapping(target = "mileageEvent", ignore = true)
-	@Mapping(target = "memberNo", expression = "java(java.util.UUID.randomUUID().toString())")
-	Member toEntity(SignUpRequestDto signUpRequestDto);
+
 
 }

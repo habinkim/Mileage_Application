@@ -29,9 +29,7 @@ public class QMember extends EntityPathBase<Member> {
 
     public final StringPath memberNo = createString("memberNo");
 
-    public final ListPath<Mileage, QMileage> mileage = this.<Mileage, QMileage>createList("mileage", Mileage.class, QMileage.class, PathInits.DIRECT2);
-
-    public final NumberPath<Integer> totalMileageAmount = createNumber("totalMileageAmount", Integer.class);
+    public final ListPath<MileageEvent, QMileageEvent> mileageEvent = this.<MileageEvent, QMileageEvent>createList("mileageEvent", MileageEvent.class, QMileageEvent.class, PathInits.DIRECT2);
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updDtm = _super.updDtm;

@@ -7,11 +7,11 @@ import com.habin.marketboro_mileage_task.common.ApiResponse;
 import com.habin.marketboro_mileage_task.dto.MileageListResponseDto;
 import com.habin.marketboro_mileage_task.dto.MileageRequestDto;
 import com.habin.marketboro_mileage_task.dto.TotalMileageResponseDto;
-import com.habin.marketboro_mileage_task.entity.Mileage;
-import com.habin.marketboro_mileage_task.entity.MileageType;
-import com.habin.marketboro_mileage_task.module.mapper.MileageMapper;
+import com.habin.marketboro_mileage_task.entity.MileageEvent;
+import com.habin.marketboro_mileage_task.entity.enums.MileageStatus;
+import com.habin.marketboro_mileage_task.module.mapper.MileageEventMapper;
 import com.habin.marketboro_mileage_task.repository.MemberRepository;
-import com.habin.marketboro_mileage_task.repository.MileageRepository;
+import com.habin.marketboro_mileage_task.repository.MileageEventRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -32,19 +32,19 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class MileageService {
 
     private final MemberRepository memberRepository;
-    private final MileageRepository mileageRepository;
-    private final MileageMapper mileageMapper;
+    private final MileageEventRepository mileageEventRepository;
+    private final MileageEventMapper mileageEventMapper;
     private final ObjectMapper objectMapper;
 
     @Transactional(readOnly = true)
     public ResponseEntity<ApiResponse<List<TotalMileageResponseDto>>> getTotalMileage(String memberNo) {
-        List<TotalMileageResponseDto> total = mileageRepository.total(memberNo);
+        List<TotalMileageResponseDto> total = mileageEventRepository.total(memberNo);
         return ApiResponse.success(total);
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity<ApiResponse<SerializablePage<MileageListResponseDto>>> getMileageList(String memberNo, MileageType mileageType, Integer page, Integer size) {
-        SerializablePage<MileageListResponseDto> list = mileageRepository.listWithPaging(memberNo, mileageType, PageRequest.of(page - 1, size));
+    public ResponseEntity<ApiResponse<SerializablePage<MileageListResponseDto>>> getMileageList(String memberNo, MileageStatus mileageStatus, Integer page, Integer size) {
+        SerializablePage<MileageListResponseDto> list = mileageEventRepository.listWithPaging(memberNo, mileageStatus, PageRequest.of(page - 1, size));
         return ApiResponse.success(list);
     }
 
@@ -54,9 +54,8 @@ public class MileageService {
             @CacheEvict(value = "mileageList", allEntries = true)
     })
     public ResponseEntity<ApiResponse<Object>> saveMileage(MileageRequestDto mileageRequestDto) {
-        Mileage mileage = mileageMapper.mileageSaveDtoToEntity(mileageRequestDto, MileageType.SAVE);
-        mileageRepository.save(mileage);
-//        mileageCacheRepository.deleteMileage(mileageRequestDto.memberNo());
+        MileageEvent mileageEvent = mileageEventMapper.mileageSaveDtoToEntity(mileageRequestDto, MileageStatus.SAVE);
+        mileageEventRepository.save(mileageEvent);
         return ApiResponse.success();
     }
 
@@ -66,10 +65,10 @@ public class MileageService {
             @CacheEvict(value = "mileageList", allEntries = true)
     })
     public ResponseEntity<ApiResponse<Object>> useMileage(MileageRequestDto mileageRequestDto) throws JsonProcessingException {
-        Mileage mileage = mileageMapper.mileageSaveDtoToEntity(mileageRequestDto, MileageType.CONSUMPTION);
-        mileageRepository.save(mileage);
+        MileageEvent mileageEvent = mileageEventMapper.mileageSaveDtoToEntity(mileageRequestDto, MileageStatus.USED);
+        mileageEventRepository.save(mileageEvent);
 
-        ConcurrentLinkedQueue<MileageListResponseDto> queue = mileageRepository.queue(mileageRequestDto.memberNo(), MileageType.SAVE);
+        ConcurrentLinkedQueue<MileageListResponseDto> queue = mileageEventRepository.queue(mileageRequestDto.memberNo(), MileageStatus.SAVE);
         AtomicInteger sum = new AtomicInteger(mileageRequestDto.sum());
 
         ConcurrentLinkedQueue<MileageListResponseDto> collect = queue.stream().dropWhile(m -> {
