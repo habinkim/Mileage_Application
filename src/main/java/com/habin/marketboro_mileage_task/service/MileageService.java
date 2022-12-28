@@ -2,16 +2,17 @@ package com.habin.marketboro_mileage_task.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.habin.marketboro_mileage_task.cache.SerializablePage;
 import com.habin.marketboro_mileage_task.common.ApiResponse;
-import com.habin.marketboro_mileage_task.dto.MileageListResponseDto;
+import com.habin.marketboro_mileage_task.common.cache.SerializablePage;
+import com.habin.marketboro_mileage_task.dto.CancelMileageRequestDto;
 import com.habin.marketboro_mileage_task.dto.MileageRequestDto;
 import com.habin.marketboro_mileage_task.dto.TotalMileageResponseDto;
-import com.habin.marketboro_mileage_task.entity.MileageEvent;
 import com.habin.marketboro_mileage_task.entity.enums.MileageStatus;
-import com.habin.marketboro_mileage_task.module.mapper.MileageEventMapper;
-import com.habin.marketboro_mileage_task.repository.MemberRepository;
-import com.habin.marketboro_mileage_task.repository.MileageEventRepository;
+import com.habin.marketboro_mileage_task.member.repository.MemberRepository;
+import com.habin.marketboro_mileage_task.mileage_event.dto.MileageEventListResponseDto;
+import com.habin.marketboro_mileage_task.mileage_event.entity.MileageEvent;
+import com.habin.marketboro_mileage_task.mileage_event.mapper.MileageEventMapper;
+import com.habin.marketboro_mileage_task.mileage_event.repository.MileageEventRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -43,8 +44,8 @@ public class MileageService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity<ApiResponse<SerializablePage<MileageListResponseDto>>> getMileageList(String memberNo, MileageStatus mileageStatus, Integer page, Integer size) {
-        SerializablePage<MileageListResponseDto> list = mileageEventRepository.listWithPaging(memberNo, mileageStatus, PageRequest.of(page - 1, size));
+    public ResponseEntity<ApiResponse<SerializablePage<MileageEventListResponseDto>>> getMileageEventList(String memberNo, MileageStatus mileageStatus, Integer page, Integer size) {
+        SerializablePage<MileageEventListResponseDto> list = mileageEventRepository.listWithPaging(memberNo, mileageStatus, PageRequest.of(page - 1, size));
         return ApiResponse.success(list);
     }
 
@@ -68,10 +69,10 @@ public class MileageService {
         MileageEvent mileageEvent = mileageEventMapper.mileageSaveDtoToEntity(mileageRequestDto, MileageStatus.USED);
         mileageEventRepository.save(mileageEvent);
 
-        ConcurrentLinkedQueue<MileageListResponseDto> queue = mileageEventRepository.queue(mileageRequestDto.memberNo(), MileageStatus.SAVE);
+        ConcurrentLinkedQueue<MileageEventListResponseDto> queue = mileageEventRepository.queue(mileageRequestDto.memberNo(), MileageStatus.SAVE);
         AtomicInteger sum = new AtomicInteger(mileageRequestDto.sum());
 
-        ConcurrentLinkedQueue<MileageListResponseDto> collect = queue.stream().dropWhile(m -> {
+        ConcurrentLinkedQueue<MileageEventListResponseDto> collect = queue.stream().dropWhile(m -> {
                     sum.updateAndGet(v -> v - m.getSum());
                     return sum.get() > 0;
                 })
@@ -83,8 +84,8 @@ public class MileageService {
     }
 
     @Transactional
-    @CacheEvict(key = "#mileageRequestDto.memberNo", value = {"mileage", "totalMileage"})
-    public ResponseEntity<ApiResponse<?>> cancelUseMileage(MileageRequestDto mileageRequestDto) {
+    @CacheEvict(key = "#cancelMileageRequestDto.memberNo", value = {"mileage", "totalMileage"})
+    public ResponseEntity<ApiResponse<?>> cancelUseMileage(CancelMileageRequestDto cancelMileageRequestDto) {
         return null;
     }
 }

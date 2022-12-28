@@ -1,12 +1,13 @@
 package com.habin.marketboro_mileage_task.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.habin.marketboro_mileage_task.cache.SerializablePage;
 import com.habin.marketboro_mileage_task.common.ApiResponse;
-import com.habin.marketboro_mileage_task.dto.MileageListResponseDto;
+import com.habin.marketboro_mileage_task.common.cache.SerializablePage;
+import com.habin.marketboro_mileage_task.dto.CancelMileageRequestDto;
 import com.habin.marketboro_mileage_task.dto.MileageRequestDto;
 import com.habin.marketboro_mileage_task.dto.TotalMileageResponseDto;
 import com.habin.marketboro_mileage_task.entity.enums.MileageStatus;
+import com.habin.marketboro_mileage_task.mileage_event.dto.MileageEventListResponseDto;
 import com.habin.marketboro_mileage_task.service.MileageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -36,8 +37,8 @@ public class MileageController {
 
     @Tag(name = "적립금 관리", description = "적립금 관리 API")
     @Operation(summary = "회원별 적립금 적립/사용 내역 조회", description = "회원별 적립금 적립/사용 내역 조회 API")
-    @GetMapping
-    public ResponseEntity<ApiResponse<SerializablePage<MileageListResponseDto>>> getMileageList(
+    @GetMapping("/event")
+    public ResponseEntity<ApiResponse<SerializablePage<MileageEventListResponseDto>>> getMileageEventList(
             @RequestParam(name = "memberNo", required = false) String memberNo,
             @RequestParam(name = "type", required = false) MileageStatus mileageStatus,
             @RequestParam(name = "page", required = false)
@@ -48,7 +49,7 @@ public class MileageController {
             @Min(message = "페이지 크기는 10 이상으로 입력해주세요.", value = 10)
             @Max(message = "페이지 크기 최댓값을 초과했습니다.", value = Integer.MAX_VALUE)
             Integer size) {
-        return mileageService.getMileageList(memberNo, mileageStatus, page, size);
+        return mileageService.getMileageEventList(memberNo, mileageStatus, page, size);
     }
 
     @Tag(name = "적립금 관리", description = "적립금 관리 API")
@@ -68,8 +69,8 @@ public class MileageController {
     @Tag(name = "적립금 관리", description = "적립금 관리 API")
     @Operation(summary = "적립금 사용 취소", description = "적립금 사용 취소 API")
     @PatchMapping("/cancel")
-    public ResponseEntity<ApiResponse<?>> cancelUseMileage(@Valid @RequestBody MileageRequestDto mileageRequestDto) {
-        return mileageService.cancelUseMileage(mileageRequestDto);
+    public ResponseEntity<ApiResponse<?>> cancelUseMileage(@Valid @RequestBody CancelMileageRequestDto cancelMileageRequestDto) {
+        return mileageService.cancelUseMileage(cancelMileageRequestDto);
     }
 
 }
