@@ -1,14 +1,16 @@
 package com.habin.marketboro_mileage_task.entity;
 
 import com.habin.marketboro_mileage_task.entity.base.BaseTimeEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.*;
 
 /**
 * @author : 김하빈(danny9643@naver.com)
@@ -35,5 +37,9 @@ public class Member extends BaseTimeEntity {
 
     @Column(nullable = false, length = 10)
     private Integer totalMileageAmount;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "member")
+    private List<Mileage> mileage = new ArrayList<>();
 
 }

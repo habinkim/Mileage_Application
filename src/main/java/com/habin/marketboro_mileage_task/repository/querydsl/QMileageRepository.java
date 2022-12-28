@@ -7,9 +7,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public interface QMileageRepository {
     List<TotalMileageResponseDto> total(String memberNo);
 
-    Page<MileageListResponseDto> list(String memberNo, MileageType mileageType, PageRequest pageRequest);
+    Page<MileageListResponseDto> listWithPaging(String memberNo, MileageType mileageType, PageRequest pageRequest);
+
+    ConcurrentLinkedQueue<MileageListResponseDto> queue(String memberNo, MileageType mileageType);
 }

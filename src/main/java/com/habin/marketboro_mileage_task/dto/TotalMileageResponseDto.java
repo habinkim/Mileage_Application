@@ -13,6 +13,6 @@ public class TotalMileageResponseDto {
 
     private String memberNo;
     private String memberNm;
-    private String totalMileageAmount;
+    private Integer totalMileageAmount;
 
 }

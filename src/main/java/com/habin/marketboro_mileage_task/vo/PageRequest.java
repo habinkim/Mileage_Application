@@ -1,4 +1,4 @@
-package com.habin.marketboro_mileage_task;
+package com.habin.marketboro_mileage_task.vo;
 
 
 import org.springframework.data.domain.Sort.Direction;

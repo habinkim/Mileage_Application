@@ -15,8 +15,9 @@ import org.mapstruct.*;
 )
 public interface MemberMapper {
 
-    @Mapping(target = "memberNo", expression = "java(java.util.UUID.randomUUID().toString())")
+    @Mapping(target = "mileage", ignore = true)
+	@Mapping(target = "memberNo", expression = "java(java.util.UUID.randomUUID().toString())")
     @Mapping(target = "totalMileageAmount", constant = "0")
-    Member toEntity(SignUpRequestDto signUpRequestDto);
+	Member toEntity(SignUpRequestDto signUpRequestDto);
 
 }
