@@ -3,8 +3,7 @@ package com.habin.marketboro_mileage_task.module.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.habin.marketboro_mileage_task.dto.MileageListResponseDto;
-import com.habin.marketboro_mileage_task.dto.TotalMileageResponseDto;
+import com.habin.marketboro_mileage_task.cache.SerializablePage;
 import io.lettuce.core.RedisURI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
@@ -12,23 +11,23 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.domain.Page;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConfiguration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.RedisSerializationContext;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentLinkedQueue;
+
+import static com.fasterxml.jackson.annotation.JsonTypeInfo.As.PROPERTY;
+import static com.fasterxml.jackson.databind.ObjectMapper.DefaultTyping.NON_FINAL;
+import static org.springframework.data.redis.serializer.RedisSerializationContext.SerializationPair.fromSerializer;
 
 @Configuration
 @EnableRedisRepositories
@@ -43,6 +42,7 @@ public class RedisConfig {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 		mapper.registerModule(new JavaTimeModule());
+		mapper.activateDefaultTyping(mapper.getPolymorphicTypeValidator(), NON_FINAL, PROPERTY);
 		return mapper;
 	}
 
@@ -64,10 +64,18 @@ public class RedisConfig {
 		return RedisCacheConfiguration
 				.defaultCacheConfig()
 				.disableCachingNullValues()
-				.serializeKeysWith(RedisSerializationContext.SerializationPair
-						.fromSerializer(new StringRedisSerializer()))
-				.serializeValuesWith(RedisSerializationContext.SerializationPair
-						.fromSerializer(new GenericJackson2JsonRedisSerializer(objectMapper())))
+				.serializeKeysWith(fromSerializer(new StringRedisSerializer()))
+				.serializeValuesWith(fromSerializer(new GenericJackson2JsonRedisSerializer(objectMapper())))
+//				.serializeValuesWith(fromSerializer(new StringRedisSerializer()))
+				.entryTtl(Duration.ofHours(1));
+	}
+
+	private RedisCacheConfiguration redisCacheSerializablePageConfiguration() {
+		return RedisCacheConfiguration
+				.defaultCacheConfig()
+				.disableCachingNullValues()
+				.serializeKeysWith(fromSerializer(new StringRedisSerializer()))
+				.serializeValuesWith(fromSerializer(new Jackson2JsonRedisSerializer<>(SerializablePage.class)))
 				.entryTtl(Duration.ofHours(1));
 	}
 
@@ -90,39 +98,13 @@ public class RedisConfig {
 	@Bean(name = "cacheManager")
 	public CacheManager redisCacheManager() {
 		Map<String, RedisCacheConfiguration> cacheConfigurations = new HashMap<>();
+		cacheConfigurations.put("mileageList", redisCacheSerializablePageConfiguration());
 
 		return RedisCacheManager.RedisCacheManagerBuilder
 				.fromConnectionFactory(redisConnectionFactory())
 				.cacheDefaults(redisCacheDefaultConfiguration())
-//				.withInitialCacheConfigurations(redisCacheConfigurationMap())
+				.withInitialCacheConfigurations(cacheConfigurations)
 				.build();
-	}
-
-	@Bean
-	public RedisTemplate<String, List<TotalMileageResponseDto>> totalMileageRedisTemplate() {
-		RedisTemplate<String, List<TotalMileageResponseDto>> redisTemplate = new RedisTemplate<>();
-		redisTemplate.setConnectionFactory(redisConnectionFactory());
-		redisTemplate.setKeySerializer(new StringRedisSerializer());
-		redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer(objectMapper()));
-		return redisTemplate;
-	}
-
-	@Bean
-	public RedisTemplate<String, Page<MileageListResponseDto>> mileageListRedisTemplate() {
-		RedisTemplate<String, Page<MileageListResponseDto>> redisTemplate = new RedisTemplate<>();
-		redisTemplate.setConnectionFactory(redisConnectionFactory());
-		redisTemplate.setKeySerializer(new StringRedisSerializer());
-		redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer(objectMapper()));
-		return redisTemplate;
-	}
-
-	@Bean
-	public RedisTemplate<String, ConcurrentLinkedQueue<MileageListResponseDto>> mileageListQueueRedisTemplate() {
-		RedisTemplate<String, ConcurrentLinkedQueue<MileageListResponseDto>> redisTemplate = new RedisTemplate<>();
-		redisTemplate.setConnectionFactory(redisConnectionFactory());
-		redisTemplate.setKeySerializer(new StringRedisSerializer());
-		redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer(objectMapper()));
-		return redisTemplate;
 	}
 
 }

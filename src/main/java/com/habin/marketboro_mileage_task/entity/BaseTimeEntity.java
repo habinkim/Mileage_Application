@@ -1,10 +1,13 @@
-package com.habin.marketboro_mileage_task.entity.base;
+package com.habin.marketboro_mileage_task.entity;
 
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.habin.marketboro_mileage_task.module.json.CustomLocalDateTimeDeserializer;
 import com.habin.marketboro_mileage_task.module.json.CustomLocalDateTimeSerializer;
+import jakarta.persistence.Column;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.MappedSuperclass;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Comment;
@@ -12,9 +15,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.Column;
-import javax.persistence.EntityListeners;
-import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
 
 @EntityListeners(AuditingEntityListener.class)
@@ -26,16 +26,16 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class BaseTimeEntity {
 
-	@CreatedDate
 	@JsonDeserialize(using = CustomLocalDateTimeDeserializer.class)
 	@JsonSerialize(using = CustomLocalDateTimeSerializer.class)
+	@CreatedDate
 	@Column(nullable = false, updatable = false)
 	@Comment("등록 일시")
 	private LocalDateTime insDtm;
 
-	@LastModifiedDate
 	@JsonDeserialize(using = CustomLocalDateTimeDeserializer.class)
 	@JsonSerialize(using = CustomLocalDateTimeSerializer.class)
+	@LastModifiedDate
 	@Column
 	@Comment("수정 일시")
 	private LocalDateTime updDtm;

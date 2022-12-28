@@ -1,22 +1,22 @@
 package com.habin.marketboro_mileage_task.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.habin.marketboro_mileage_task.cache.SerializablePage;
 import com.habin.marketboro_mileage_task.common.ApiResponse;
 import com.habin.marketboro_mileage_task.dto.MileageListResponseDto;
 import com.habin.marketboro_mileage_task.dto.MileageRequestDto;
 import com.habin.marketboro_mileage_task.dto.TotalMileageResponseDto;
-import com.habin.marketboro_mileage_task.entity.enums.MileageType;
+import com.habin.marketboro_mileage_task.entity.MileageType;
 import com.habin.marketboro_mileage_task.service.MileageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import java.util.List;
 
 @Tag(name = "적립금 관리", description = "적립금 관리 API")
@@ -37,7 +37,7 @@ public class MileageController {
     @Tag(name = "적립금 관리", description = "적립금 관리 API")
     @Operation(summary = "회원별 적립금 적립/사용 내역 조회", description = "회원별 적립금 적립/사용 내역 조회 API")
     @GetMapping
-    public ResponseEntity<ApiResponse<Page<MileageListResponseDto>>> getMileageList(
+    public ResponseEntity<ApiResponse<SerializablePage<MileageListResponseDto>>> getMileageList(
             @RequestParam(name = "memberNo", required = false) String memberNo,
             @RequestParam(name = "type", required = false) MileageType mileageType,
             @RequestParam(name = "page", required = false)

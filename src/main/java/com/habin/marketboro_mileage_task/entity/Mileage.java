@@ -1,14 +1,12 @@
 package com.habin.marketboro_mileage_task.entity;
 
-import com.habin.marketboro_mileage_task.entity.base.BaseTimeEntity;
-import com.habin.marketboro_mileage_task.entity.enums.MileageType;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Comment;
 
-import javax.persistence.*;
 
 /**
 * @author : 김하빈(danny9643@naver.com)

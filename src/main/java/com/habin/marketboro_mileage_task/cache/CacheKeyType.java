@@ -1,4 +1,4 @@
-package com.habin.marketboro_mileage_task.repository.cache;
+package com.habin.marketboro_mileage_task.cache;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public enum CacheKeyType {
 
-    TOTAL_MILEAGE("TOTAL_MILEAGE:"), MILEAGE_LIST("MILEAGE_LIST:"), MILEAGE_QUEUE("MILEAGE_QUEUE:");
+    TOTAL_MILEAGE("TOTAL_MILEAGE"), MILEAGE_LIST("MILEAGE_LIST"), MILEAGE_QUEUE("MILEAGE_QUEUE");
 
     private String prefix;
 

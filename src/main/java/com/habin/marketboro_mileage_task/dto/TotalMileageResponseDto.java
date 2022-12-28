@@ -5,11 +5,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Builder(toBuilder = true)
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TotalMileageResponseDto {
+public class TotalMileageResponseDto implements Serializable {
 
     private String memberNo;
     private String memberNm;

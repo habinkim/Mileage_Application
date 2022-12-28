@@ -1,24 +1,24 @@
 package com.habin.marketboro_mileage_task.repository.querydsl;
 
+import com.habin.marketboro_mileage_task.cache.SerializablePage;
+import com.habin.marketboro_mileage_task.cache.SerializablePageExecutionUtils;
 import com.habin.marketboro_mileage_task.dto.MileageListResponseDto;
 import com.habin.marketboro_mileage_task.dto.TotalMileageResponseDto;
-import com.habin.marketboro_mileage_task.entity.enums.MileageType;
+import com.habin.marketboro_mileage_task.entity.MileageType;
 import com.habin.marketboro_mileage_task.module.jpa.PredicateTemplate;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.EntityManager;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static com.habin.marketboro_mileage_task.entity.QMember.member;
 import static com.habin.marketboro_mileage_task.entity.QMileage.mileage;
 import static com.querydsl.core.types.Projections.fields;
-import static org.springframework.data.support.PageableExecutionUtils.getPage;
 
 public class QMileageRepositoryImpl implements QMileageRepository {
 
@@ -50,8 +50,8 @@ public class QMileageRepositoryImpl implements QMileageRepository {
     }
 
     @Override
-    @Cacheable(key = "#p0 + '_' + #p1 + '_' + #pageRequest.pageNumber + '_' + #pageRequest.pageSize", value = "mileageList", cacheManager = "cacheManager")
-    public Page<MileageListResponseDto> listWithPaging(String memberNo, MileageType mileageType, PageRequest pageRequest) {
+    @Cacheable(key = "#p0.concat('_').concat(#p1).concat('_').concat(#pageRequest.pageNumber).concat('_').concat(#pageRequest.pageSize)", value = "mileageList", cacheManager = "cacheManager")
+    public SerializablePage<MileageListResponseDto> listWithPaging(String memberNo, MileageType mileageType, PageRequest pageRequest) {
         Predicate predicate = PredicateTemplate.builder()
                 .eqString(member.memberNo, memberNo)
                 .eqEnum(mileage.mileageType, mileageType)
@@ -80,7 +80,7 @@ public class QMileageRepositoryImpl implements QMileageRepository {
                 .orderBy(mileage.insDtm.desc())
                 .where(predicate);
 
-        return getPage(fetch, pageRequest, countQuery::fetchOne);
+        return SerializablePageExecutionUtils.getPage(fetch, pageRequest, countQuery::fetchOne);
     }
 
     @Override

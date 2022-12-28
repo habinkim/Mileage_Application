@@ -1,10 +1,10 @@
 package com.habin.marketboro_mileage_task.dto;
 
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 public record MileageRequestDto(@NotBlank(message = "회원번호를 입력해주세요.")
                                 @Size(max = 50, message = "회원번호는 50자 이하로 입력해주세요.")

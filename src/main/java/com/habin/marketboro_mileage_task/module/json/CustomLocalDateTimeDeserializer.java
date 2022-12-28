@@ -10,11 +10,11 @@ import java.time.format.DateTimeFormatter;
 
 public class CustomLocalDateTimeDeserializer extends JsonDeserializer<LocalDateTime> {
 
-	// Singleton
-	private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    // Singleton
+    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-	@Override
-	public LocalDateTime deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-		return LocalDateTime.parse(p.getText(), DATE_FORMAT);
-	}
+    @Override
+    public LocalDateTime deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+        return LocalDateTime.parse(p.getText(), DATE_FORMAT);
+    }
 }

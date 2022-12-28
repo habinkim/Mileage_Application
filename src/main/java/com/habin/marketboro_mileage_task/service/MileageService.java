@@ -2,20 +2,20 @@ package com.habin.marketboro_mileage_task.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.habin.marketboro_mileage_task.cache.SerializablePage;
 import com.habin.marketboro_mileage_task.common.ApiResponse;
 import com.habin.marketboro_mileage_task.dto.MileageListResponseDto;
 import com.habin.marketboro_mileage_task.dto.MileageRequestDto;
 import com.habin.marketboro_mileage_task.dto.TotalMileageResponseDto;
 import com.habin.marketboro_mileage_task.entity.Mileage;
-import com.habin.marketboro_mileage_task.entity.enums.MileageType;
+import com.habin.marketboro_mileage_task.entity.MileageType;
 import com.habin.marketboro_mileage_task.module.mapper.MileageMapper;
 import com.habin.marketboro_mileage_task.repository.MemberRepository;
 import com.habin.marketboro_mileage_task.repository.MileageRepository;
-import com.habin.marketboro_mileage_task.repository.cache.MileageCacheRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.data.domain.Page;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -33,29 +33,26 @@ public class MileageService {
 
     private final MemberRepository memberRepository;
     private final MileageRepository mileageRepository;
-    private final MileageCacheRepository mileageCacheRepository;
     private final MileageMapper mileageMapper;
     private final ObjectMapper objectMapper;
 
     @Transactional(readOnly = true)
     public ResponseEntity<ApiResponse<List<TotalMileageResponseDto>>> getTotalMileage(String memberNo) {
-//        List<TotalMileageResponseDto> total = mileageCacheRepository.getTotalMileage(memberNo)
-//                .orElse(mileageRepository.total(memberNo));
         List<TotalMileageResponseDto> total = mileageRepository.total(memberNo);
-//        mileageCacheRepository.setTotalMileage(memberNo, total);
         return ApiResponse.success(total);
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity<ApiResponse<Page<MileageListResponseDto>>> getMileageList(String memberNo, MileageType mileageType, Integer page, Integer size) {
-//        Page<MileageListResponseDto> list = mileageCacheRepository.getMileageList(memberNo, mileageType, page, size)
-//                .orElse(mileageRepository.listWithPaging(memberNo, mileageType, PageRequest.of(page - 1, size)));
-        Page<MileageListResponseDto> list = mileageRepository.listWithPaging(memberNo, mileageType, PageRequest.of(page - 1, size));
+    public ResponseEntity<ApiResponse<SerializablePage<MileageListResponseDto>>> getMileageList(String memberNo, MileageType mileageType, Integer page, Integer size) {
+        SerializablePage<MileageListResponseDto> list = mileageRepository.listWithPaging(memberNo, mileageType, PageRequest.of(page - 1, size));
         return ApiResponse.success(list);
     }
 
     @Transactional
-    @CacheEvict(key = "'MILEAGE_LIST:' + #mileageRequestDto.memberNo", value = {"mileage", "totalMileage"})
+    @Caching(evict = {
+            @CacheEvict(key = "#mileageRequestDto.memberNo", value = {"totalMileage"}),
+            @CacheEvict(value = "mileageList", allEntries = true)
+    })
     public ResponseEntity<ApiResponse<Object>> saveMileage(MileageRequestDto mileageRequestDto) {
         Mileage mileage = mileageMapper.mileageSaveDtoToEntity(mileageRequestDto, MileageType.SAVE);
         mileageRepository.save(mileage);
@@ -64,7 +61,10 @@ public class MileageService {
     }
 
     @Transactional
-    @CacheEvict(key = "'MILEAGE_QUEUE:' + #mileageRequestDto.memberNo", value = {"mileage", "totalMileage"})
+    @Caching(evict = {
+            @CacheEvict(key = "#mileageRequestDto.memberNo", value = {"totalMileage"}),
+            @CacheEvict(value = "mileageList", allEntries = true)
+    })
     public ResponseEntity<ApiResponse<Object>> useMileage(MileageRequestDto mileageRequestDto) throws JsonProcessingException {
         Mileage mileage = mileageMapper.mileageSaveDtoToEntity(mileageRequestDto, MileageType.CONSUMPTION);
         mileageRepository.save(mileage);
