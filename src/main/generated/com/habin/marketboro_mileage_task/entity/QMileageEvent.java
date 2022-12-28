@@ -27,6 +27,8 @@ public class QMileageEvent extends EntityPathBase<MileageEvent> {
     // inherited
     public final QMember member;
 
+    public final ListPath<MileageDetail, QMileageDetail> mileageDetail = this.<MileageDetail, QMileageDetail>createList("mileageDetail", MileageDetail.class, QMileageDetail.class, PathInits.DIRECT2);
+
     public final StringPath mileageEventId = createString("mileageEventId");
 
     //inherited

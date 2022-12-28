@@ -29,6 +29,10 @@ public class MileageBaseEntity {
     @Comment("회원 번호")
     private Member member;
 
+//    @Column(nullable = false, length = 50)
+//    @Comment("회원 번호")
+//    private String memberNo;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 15)
     @Comment("상태")

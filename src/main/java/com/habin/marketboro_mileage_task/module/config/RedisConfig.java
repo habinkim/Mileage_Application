@@ -66,11 +66,10 @@ public class RedisConfig {
 				.disableCachingNullValues()
 				.serializeKeysWith(fromSerializer(new StringRedisSerializer()))
 				.serializeValuesWith(fromSerializer(new GenericJackson2JsonRedisSerializer(objectMapper())))
-//				.serializeValuesWith(fromSerializer(new StringRedisSerializer()))
 				.entryTtl(Duration.ofHours(1));
 	}
 
-	private RedisCacheConfiguration redisCacheSerializablePageConfiguration() {
+	private RedisCacheConfiguration redisCachePageConfiguration() {
 		return RedisCacheConfiguration
 				.defaultCacheConfig()
 				.disableCachingNullValues()
@@ -98,7 +97,7 @@ public class RedisConfig {
 	@Bean(name = "cacheManager")
 	public CacheManager redisCacheManager() {
 		Map<String, RedisCacheConfiguration> cacheConfigurations = new HashMap<>();
-		cacheConfigurations.put("mileageList", redisCacheSerializablePageConfiguration());
+		cacheConfigurations.put("mileageList", redisCachePageConfiguration());
 
 		return RedisCacheManager.RedisCacheManagerBuilder
 				.fromConnectionFactory(redisConnectionFactory())

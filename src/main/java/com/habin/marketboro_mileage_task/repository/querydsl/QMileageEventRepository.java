@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public interface QMileageEventRepository {
+
     List<TotalMileageResponseDto> total(String memberNo);
 
     SerializablePage<MileageListResponseDto> listWithPaging(String memberNo, MileageStatus mileageStatus, PageRequest pageRequest);
