@@ -7,7 +7,6 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
-import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -20,19 +19,13 @@ public class QMember extends EntityPathBase<Member> {
 
     public static final QMember member = new QMember("member1");
 
-    public final QBaseTimeEntity _super = new QBaseTimeEntity(this);
-
-    //inherited
-    public final DateTimePath<java.time.LocalDateTime> insDtm = _super.insDtm;
-
     public final StringPath memberNm = createString("memberNm");
 
-    public final StringPath memberNo = createString("memberNo");
+    public final ComparablePath<java.util.UUID> memberNo = createComparable("memberNo", java.util.UUID.class);
 
-    public final ListPath<com.habin.marketboro_mileage_task.mileage_event.entity.MileageEvent, com.habin.marketboro_mileage_task.mileage_event.entity.QMileageEvent> mileageEvent = this.<com.habin.marketboro_mileage_task.mileage_event.entity.MileageEvent, com.habin.marketboro_mileage_task.mileage_event.entity.QMileageEvent>createList("mileageEvent", com.habin.marketboro_mileage_task.mileage_event.entity.MileageEvent.class, com.habin.marketboro_mileage_task.mileage_event.entity.QMileageEvent.class, PathInits.DIRECT2);
+    public final DateTimePath<java.time.LocalDateTime> registerDtm = createDateTime("registerDtm", java.time.LocalDateTime.class);
 
-    //inherited
-    public final DateTimePath<java.time.LocalDateTime> updDtm = _super.updDtm;
+    public final NumberPath<Integer> totalAmount = createNumber("totalAmount", Integer.class);
 
     public QMember(String variable) {
         super(Member.class, forVariable(variable));

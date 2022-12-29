@@ -1,4 +1,4 @@
-package com.habin.marketboro_mileage_task.entity.enums;
+package com.habin.marketboro_mileage_task.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

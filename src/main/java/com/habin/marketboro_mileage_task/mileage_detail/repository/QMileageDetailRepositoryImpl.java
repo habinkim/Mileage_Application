@@ -6,8 +6,8 @@ import jakarta.persistence.EntityManager;
 
 import java.util.List;
 
-import static com.habin.marketboro_mileage_task.entity.QMileageDetail.mileageDetail;
-import static com.habin.marketboro_mileage_task.entity.QMileageEvent.mileageEvent;
+import static com.habin.marketboro_mileage_task.mileage_detail.entity.QMileageDetail.mileageDetail;
+import static com.habin.marketboro_mileage_task.mileage_event.entity.QMileageEvent.mileageEvent;
 
 public class QMileageDetailRepositoryImpl implements QMileageDetailRepository {
 

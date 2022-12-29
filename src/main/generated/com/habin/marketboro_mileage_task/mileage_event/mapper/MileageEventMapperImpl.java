@@ -1,6 +1,7 @@
-package com.habin.marketboro_mileage_task.mileage_detail.mapper;
+package com.habin.marketboro_mileage_task.mileage_event.mapper;
 
 import javax.annotation.processing.Generated;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 @Generated(
@@ -9,5 +10,6 @@ import org.springframework.stereotype.Component;
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.2 (Oracle Corporation)"
 )
 @Component
-public class MileageDetailMapperImpl implements MileageDetailMapper {
+@Primary
+public class MileageEventMapperImpl extends MileageEventDecorator {
 }

@@ -1,8 +1,8 @@
 package com.habin.marketboro_mileage_task.mileage_event.mapper;
 
+import com.habin.marketboro_mileage_task.common.MileageStatus;
 import com.habin.marketboro_mileage_task.common.mapper.EntityMapper;
-import com.habin.marketboro_mileage_task.dto.MileageRequestDto;
-import com.habin.marketboro_mileage_task.entity.enums.MileageStatus;
+import com.habin.marketboro_mileage_task.dto.MileageEventRequestDto;
 import com.habin.marketboro_mileage_task.mileage_event.entity.MileageEvent;
 import org.mapstruct.*;
 
@@ -17,12 +17,13 @@ import org.mapstruct.*;
 @DecoratedWith(MileageEventDecorator.class)
 public interface MileageEventMapper {
 
-	@Mapping(target = "mileageEventId", ignore = true)
+	@Mapping(target = "id", ignore = true)
+	@Mapping(target = "mileageDetail", ignore = true)
 	@Mapping(target = "remainMileageExpireDtm", ignore = true)
     @Mapping(target = "transactionDtm", expression = "java(java.time.LocalDateTime.now())")
-	@Mapping(target = "sum", source = "mileageRequestDto.sum")
+	@Mapping(target = "sum", source = "mileageEventRequestDto.sum")
     @Mapping(target = "mileageStatus", source = "mileageStatus")
-    @Mapping(target = "member", source = "mileageRequestDto.memberNo")
-    MileageEvent mileageSaveDtoToEntity(MileageRequestDto mileageRequestDto, MileageStatus mileageStatus);
+    @Mapping(target = "member", source = "mileageEventRequestDto.memberNo")
+    MileageEvent mileageSaveDtoToEntity(MileageEventRequestDto mileageEventRequestDto, MileageStatus mileageStatus);
 
 }

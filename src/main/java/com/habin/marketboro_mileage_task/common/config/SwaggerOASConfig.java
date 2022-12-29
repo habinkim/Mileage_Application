@@ -12,7 +12,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import static java.time.LocalDate.now;
 
 @Configuration
-public class SwaggerOpenApiConfig implements WebMvcConfigurer {
+public class SwaggerOASConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {

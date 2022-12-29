@@ -30,7 +30,7 @@ public class QMileageDetail extends EntityPathBase<MileageDetail> {
 
     public final com.habin.marketboro_mileage_task.mileage_event.entity.QMileageEvent mileageEvent;
 
-    public final EnumPath<com.habin.marketboro_mileage_task.entity.enums.MileageStatus> mileageStatus = createEnum("mileageStatus", com.habin.marketboro_mileage_task.entity.enums.MileageStatus.class);
+    public final EnumPath<com.habin.marketboro_mileage_task.common.MileageStatus> mileageStatus = createEnum("mileageStatus", com.habin.marketboro_mileage_task.common.MileageStatus.class);
 
     public final DateTimePath<java.time.LocalDateTime> remainMileageExpireDtm = createDateTime("remainMileageExpireDtm", java.time.LocalDateTime.class);
 

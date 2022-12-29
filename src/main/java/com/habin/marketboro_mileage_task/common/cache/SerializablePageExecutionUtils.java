@@ -3,18 +3,19 @@ package com.habin.marketboro_mileage_task.common.cache;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.util.Assert;
 
 import java.util.List;
 import java.util.function.LongSupplier;
+
+import static org.springframework.util.Assert.notNull;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public abstract class SerializablePageExecutionUtils {
 
     public static <T> SerializablePage<T> getPage(List<T> content, Pageable pageable, LongSupplier totalSupplier) {
-        Assert.notNull(content, "Content must not be null");
-        Assert.notNull(pageable, "Pageable must not be null");
-        Assert.notNull(totalSupplier, "TotalSupplier must not be null");
+        notNull(content, "Content must not be null");
+        notNull(pageable, "Pageable must not be null");
+        notNull(totalSupplier, "TotalSupplier must not be null");
 
         if (pageable.isUnpaged() || pageable.getOffset() == 0) {
 

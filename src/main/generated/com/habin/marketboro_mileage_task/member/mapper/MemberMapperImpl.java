@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-12-29T00:03:31+0900",
+    date = "2022-12-29T10:42:58+0900",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.2 (Oracle Corporation)"
 )
 @Component
@@ -19,13 +19,13 @@ public class MemberMapperImpl implements MemberMapper {
             return null;
         }
 
-        Member.MemberBuilder<?, ?> member = Member.builder();
+        Member.MemberBuilder member = Member.builder();
 
         if ( signUpRequestDto.memberNm() != null ) {
             member.memberNm( signUpRequestDto.memberNm() );
         }
 
-        member.memberNo( java.util.UUID.randomUUID().toString() );
+        member.totalAmount( 0 );
 
         return member.build();
     }

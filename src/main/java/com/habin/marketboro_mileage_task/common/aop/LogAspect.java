@@ -45,15 +45,15 @@ public class LogAspect {
             .configure(FAIL_ON_EMPTY_BEANS, false)
             .registerModules(new Hibernate5Module(), new JavaTimeModule());
 
-    @Pointcut("within(com.habin.marketboro_mileage_task.repository..*)")
+    @Pointcut("within(com.habin.marketboro_mileage_task.*.repository..*)")
     public void jpaQuery() {
     }
 
-    @Pointcut("within(com.habin.marketboro_mileage_task.module..*)")
+    @Pointcut("within(com.habin.marketboro_mileage_task.*.module..*)")
     public void module() {
     }
 
-    @Pointcut("within(com.habin.marketboro_mileage_task.module.json..*)")
+    @Pointcut("within(com.habin.marketboro_mileage_task.*.module.json..*)")
     public void jsonModule() {
     }
 

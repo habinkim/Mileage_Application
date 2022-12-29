@@ -2,9 +2,9 @@ package com.habin.marketboro_mileage_task.mileage_event.entity;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.habin.marketboro_mileage_task.common.MileageStatus;
 import com.habin.marketboro_mileage_task.common.json.CustomLocalDateTimeDeserializer;
 import com.habin.marketboro_mileage_task.common.json.CustomLocalDateTimeSerializer;
-import com.habin.marketboro_mileage_task.entity.enums.MileageStatus;
 import com.habin.marketboro_mileage_task.member.entity.Member;
 import com.habin.marketboro_mileage_task.mileage_detail.entity.MileageDetail;
 import jakarta.persistence.*;
@@ -14,6 +14,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,6 +28,7 @@ import java.util.List;
 * TODO <p>
 * @Date : 2022-12-26, Mon, 23;6
 */
+@EntityListeners(AuditingEntityListener.class)
 @Builder(toBuilder = true)
 @Entity
 @Getter

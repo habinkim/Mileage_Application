@@ -1,6 +1,8 @@
 package com.habin.marketboro_mileage_task.member.service;
 
 import com.habin.marketboro_mileage_task.common.ApiResponse;
+import com.habin.marketboro_mileage_task.common.cache.SerializablePage;
+import com.habin.marketboro_mileage_task.member.dto.MileageAmountResponseDto;
 import com.habin.marketboro_mileage_task.member.dto.SignUpRequestDto;
 import com.habin.marketboro_mileage_task.member.entity.Member;
 import com.habin.marketboro_mileage_task.member.mapper.MemberMapper;
@@ -21,9 +23,20 @@ public class MemberService {
     @Transactional
     public ResponseEntity<ApiResponse<Member>> signUp(SignUpRequestDto signUpRequestDto) {
         Member member = memberMapper.toEntity(signUpRequestDto);
-        member = memberRepository.save(member);
+        memberRepository.save(member);
 
-        return ApiResponse.success(member);
+        return ApiResponse.success();
     }
 
+    @Transactional(readOnly = true)
+    public ResponseEntity<ApiResponse<MileageAmountResponseDto>> getMileageAmount(String memberNo) {
+        MileageAmountResponseDto accumulatedMileage = memberRepository.getMileageAmount(memberNo);
+        return ApiResponse.success(accumulatedMileage);
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseEntity<ApiResponse<SerializablePage<MileageAmountResponseDto>>> getMileageAmountList(Integer page, Integer size) {
+        SerializablePage<MileageAmountResponseDto> list = memberRepository.getMileageAmountList(page, size);
+        return ApiResponse.success(list);
+    }
 }

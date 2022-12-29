@@ -2,9 +2,9 @@ package com.habin.marketboro_mileage_task.mileage_event.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.habin.marketboro_mileage_task.common.MileageStatus;
 import com.habin.marketboro_mileage_task.common.json.CustomLocalDateTimeDeserializer;
 import com.habin.marketboro_mileage_task.common.json.CustomLocalDateTimeSerializer;
-import com.habin.marketboro_mileage_task.entity.enums.MileageStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

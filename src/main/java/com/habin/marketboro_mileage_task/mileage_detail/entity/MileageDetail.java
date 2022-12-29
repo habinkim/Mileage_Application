@@ -2,9 +2,9 @@ package com.habin.marketboro_mileage_task.mileage_detail.entity;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.habin.marketboro_mileage_task.common.MileageStatus;
 import com.habin.marketboro_mileage_task.common.json.CustomLocalDateTimeDeserializer;
 import com.habin.marketboro_mileage_task.common.json.CustomLocalDateTimeSerializer;
-import com.habin.marketboro_mileage_task.entity.enums.MileageStatus;
 import com.habin.marketboro_mileage_task.member.entity.Member;
 import com.habin.marketboro_mileage_task.mileage_event.entity.MileageEvent;
 import jakarta.persistence.*;
