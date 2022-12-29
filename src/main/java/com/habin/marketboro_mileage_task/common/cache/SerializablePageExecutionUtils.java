@@ -12,10 +12,14 @@ import static org.springframework.util.Assert.notNull;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public abstract class SerializablePageExecutionUtils {
 
+    private static final String TOTAL_SUPPLIER_MUST_NOT_BE_NULL = "TotalSupplier must not be null";
+    private static final String PAGEABLE_MUST_NOT_BE_NULL = "Pageable must not be null";
+    private static final String CONTENT_MUST_NOT_BE_NULL = "Content must not be null";
+
     public static <T> SerializablePage<T> getPage(List<T> content, Pageable pageable, LongSupplier totalSupplier) {
-        notNull(content, "Content must not be null");
-        notNull(pageable, "Pageable must not be null");
-        notNull(totalSupplier, "TotalSupplier must not be null");
+        notNull(content, CONTENT_MUST_NOT_BE_NULL);
+        notNull(pageable, PAGEABLE_MUST_NOT_BE_NULL);
+        notNull(totalSupplier, TOTAL_SUPPLIER_MUST_NOT_BE_NULL);
 
         if (pageable.isUnpaged() || pageable.getOffset() == 0) {
 

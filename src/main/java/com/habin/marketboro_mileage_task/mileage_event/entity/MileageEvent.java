@@ -6,7 +6,6 @@ import com.habin.marketboro_mileage_task.common.MileageStatus;
 import com.habin.marketboro_mileage_task.common.json.CustomLocalDateTimeDeserializer;
 import com.habin.marketboro_mileage_task.common.json.CustomLocalDateTimeSerializer;
 import com.habin.marketboro_mileage_task.member.entity.Member;
-import com.habin.marketboro_mileage_task.mileage_detail.entity.MileageDetail;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,7 +16,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 
 /**
@@ -42,21 +40,18 @@ public class MileageEvent {
     @Comment("적립금 이력 아이디")
     private String id;
 
-    @OneToMany(mappedBy = "mileageEvent")
-    private List<MileageDetail> mileageDetail;
-
     @ManyToOne
     @JoinColumn(nullable = false, name = "memberNo", referencedColumnName = "memberNo")
     @Comment("회원 번호")
     private Member member;
 
     @Column(nullable = false, length = 15)
-    @Comment("상태")
+    @Comment("거래 상태")
     private MileageStatus mileageStatus;
 
     @Column(nullable = false, length = 6)
-    @Comment("거래 적립금")
-    private Integer sum;
+    @Comment("거래 금액")
+    private Integer amount;
 
     @JsonDeserialize(using = CustomLocalDateTimeDeserializer.class)
     @JsonSerialize(using = CustomLocalDateTimeSerializer.class)

@@ -57,12 +57,12 @@ public class MileageDetail {
     private Member member;
 
     @Column(nullable = false, length = 15)
-    @Comment("상태")
+    @Comment("거래 상태")
     private MileageStatus mileageStatus;
 
     @Column(nullable = false, length = 6)
-    @Comment("거래 적립금")
-    private Integer sum;
+    @Comment("거래 금액")
+    private Integer amount;
 
     @JsonDeserialize(using = CustomLocalDateTimeDeserializer.class)
     @JsonSerialize(using = CustomLocalDateTimeSerializer.class)

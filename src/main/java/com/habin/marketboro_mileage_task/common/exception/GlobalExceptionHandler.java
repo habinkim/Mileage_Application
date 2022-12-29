@@ -1,6 +1,6 @@
 package com.habin.marketboro_mileage_task.common.exception;
 
-import com.habin.marketboro_mileage_task.common.ApiResponse;
+import com.habin.marketboro_mileage_task.common.dto.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.ConstraintViolation;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.NoSuchElementException;
 
+import static com.habin.marketboro_mileage_task.common.exception.GetPrintStackTrace.GetException;
 import static java.lang.System.lineSeparator;
 import static java.util.stream.Collectors.joining;
 
@@ -29,7 +30,7 @@ public class GlobalExceptionHandler {
 		String exception = new StringBuilder()
 				.append(URL)
 				.append(lineSeparator())
-				.append(GetPrintStackTrace.GetException(e))
+				.append(GetException(e))
 				.toString();
 
 
@@ -45,7 +46,7 @@ public class GlobalExceptionHandler {
 		String exception = new StringBuilder()
 				.append(URL)
 				.append(lineSeparator())
-				.append(GetPrintStackTrace.GetException(e))
+				.append(GetException(e))
 				.toString();
 
 		log.error(e.getMessage());
@@ -60,7 +61,7 @@ public class GlobalExceptionHandler {
 		String exception = new StringBuilder()
 				.append(URL)
 				.append(lineSeparator())
-				.append(GetPrintStackTrace.GetException(e))
+				.append(GetException(e))
 				.toString();
 
 		String message = e.getConstraintViolations().stream()
@@ -80,7 +81,7 @@ public class GlobalExceptionHandler {
 		String exception = new StringBuilder()
 				.append(URL)
 				.append(lineSeparator())
-				.append(GetPrintStackTrace.GetException(e))
+				.append(GetException(e))
 				.toString();
 
 		String message = e.getBindingResult().getAllErrors().stream()

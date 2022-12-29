@@ -1,4 +1,4 @@
-package com.habin.marketboro_mileage_task.common;
+package com.habin.marketboro_mileage_task.common.dto;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

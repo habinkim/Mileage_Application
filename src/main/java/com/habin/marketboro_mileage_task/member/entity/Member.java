@@ -32,7 +32,7 @@ import java.util.UUID;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"memberNm"}))
 public class Member {
 
     @Id

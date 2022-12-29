@@ -22,6 +22,8 @@ public class QMileageDetail extends EntityPathBase<MileageDetail> {
 
     public static final QMileageDetail mileageDetail = new QMileageDetail("mileageDetail");
 
+    public final NumberPath<Integer> amount = createNumber("amount", Integer.class);
+
     public final StringPath cancelMileageDetailId = createString("cancelMileageDetailId");
 
     public final StringPath id = createString("id");
@@ -35,8 +37,6 @@ public class QMileageDetail extends EntityPathBase<MileageDetail> {
     public final DateTimePath<java.time.LocalDateTime> remainMileageExpireDtm = createDateTime("remainMileageExpireDtm", java.time.LocalDateTime.class);
 
     public final StringPath saveMileageDetailId = createString("saveMileageDetailId");
-
-    public final NumberPath<Integer> sum = createNumber("sum", Integer.class);
 
     public final DateTimePath<java.time.LocalDateTime> transactionDtm = createDateTime("transactionDtm", java.time.LocalDateTime.class);
 

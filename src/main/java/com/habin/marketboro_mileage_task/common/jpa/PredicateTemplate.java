@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PredicateTemplate {
@@ -29,6 +30,15 @@ public class PredicateTemplate {
 
 	public Predicate build() {
 		return ExpressionUtils.allOf(predicateBuilders);
+	}
+
+	public PredicateTemplate eqUUID(ComparablePath<UUID> column, String value) {
+
+		if (StringUtils.hasText(value)) {
+			predicateBuilders.add(column.eq(UUID.fromString(value)));
+		}
+
+		return this;
 	}
 
 	public PredicateTemplate eqString(StringPath column, String value) {

@@ -11,10 +11,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MileageAmountResponseDto {
 
+    /**
+     * 회원 번호
+     */
     private String memberNo;
 
+    /**
+     * 회원명
+     */
     private String memberNm;
 
+    /**
+     * 적립금 총액
+     */
     private Integer totalAmount;
 
 }

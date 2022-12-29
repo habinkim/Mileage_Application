@@ -22,17 +22,15 @@ public class QMileageEvent extends EntityPathBase<MileageEvent> {
 
     public static final QMileageEvent mileageEvent = new QMileageEvent("mileageEvent");
 
+    public final NumberPath<Integer> amount = createNumber("amount", Integer.class);
+
     public final StringPath id = createString("id");
 
     public final com.habin.marketboro_mileage_task.member.entity.QMember member;
 
-    public final ListPath<com.habin.marketboro_mileage_task.mileage_detail.entity.MileageDetail, com.habin.marketboro_mileage_task.mileage_detail.entity.QMileageDetail> mileageDetail = this.<com.habin.marketboro_mileage_task.mileage_detail.entity.MileageDetail, com.habin.marketboro_mileage_task.mileage_detail.entity.QMileageDetail>createList("mileageDetail", com.habin.marketboro_mileage_task.mileage_detail.entity.MileageDetail.class, com.habin.marketboro_mileage_task.mileage_detail.entity.QMileageDetail.class, PathInits.DIRECT2);
-
     public final EnumPath<com.habin.marketboro_mileage_task.common.MileageStatus> mileageStatus = createEnum("mileageStatus", com.habin.marketboro_mileage_task.common.MileageStatus.class);
 
     public final DateTimePath<java.time.LocalDateTime> remainMileageExpireDtm = createDateTime("remainMileageExpireDtm", java.time.LocalDateTime.class);
-
-    public final NumberPath<Integer> sum = createNumber("sum", Integer.class);
 
     public final DateTimePath<java.time.LocalDateTime> transactionDtm = createDateTime("transactionDtm", java.time.LocalDateTime.class);
 

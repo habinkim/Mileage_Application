@@ -1,8 +1,7 @@
 package com.habin.marketboro_mileage_task.mileage_event.mapper;
 
-import com.habin.marketboro_mileage_task.common.MileageStatus;
 import com.habin.marketboro_mileage_task.common.mapper.EntityMapper;
-import com.habin.marketboro_mileage_task.dto.MileageEventRequestDto;
+import com.habin.marketboro_mileage_task.mileage_event.dto.MileageEventRequestDto;
 import com.habin.marketboro_mileage_task.mileage_event.entity.MileageEvent;
 import javax.annotation.processing.Generated;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-12-29T10:42:58+0900",
+    date = "2022-12-29T14:04:22+0900",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.2 (Oracle Corporation)"
 )
 @Component
@@ -22,24 +21,23 @@ public class MileageEventMapperImpl_ implements MileageEventMapper {
     private EntityMapper entityMapper;
 
     @Override
-    public MileageEvent mileageSaveDtoToEntity(MileageEventRequestDto mileageEventRequestDto, MileageStatus mileageStatus) {
-        if ( mileageEventRequestDto == null && mileageStatus == null ) {
+    public MileageEvent mileageSaveDtoToEntity(MileageEventRequestDto mileageEventRequestDto) {
+        if ( mileageEventRequestDto == null ) {
             return null;
         }
 
         MileageEvent.MileageEventBuilder mileageEvent = MileageEvent.builder();
 
-        if ( mileageEventRequestDto != null ) {
-            if ( mileageEventRequestDto.sum() != null ) {
-                mileageEvent.sum( mileageEventRequestDto.sum() );
-            }
-            if ( mileageEventRequestDto.memberNo() != null ) {
-                mileageEvent.member( entityMapper.memberNoToMember( mileageEventRequestDto.memberNo() ) );
-            }
+        if ( mileageEventRequestDto.amount() != null ) {
+            mileageEvent.amount( mileageEventRequestDto.amount() );
         }
-        if ( mileageStatus != null ) {
-            mileageEvent.mileageStatus( mileageStatus );
+        if ( mileageEventRequestDto.mileageStatus() != null ) {
+            mileageEvent.mileageStatus( mileageEventRequestDto.mileageStatus() );
         }
+        if ( mileageEventRequestDto.memberNo() != null ) {
+            mileageEvent.member( entityMapper.memberNoToMember( mileageEventRequestDto.memberNo() ) );
+        }
+
         mileageEvent.transactionDtm( java.time.LocalDateTime.now() );
 
         return mileageEvent.build();

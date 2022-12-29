@@ -1,9 +1,11 @@
 package com.habin.marketboro_mileage_task.member.repository;
 
 import com.habin.marketboro_mileage_task.common.cache.SerializablePage;
+import com.habin.marketboro_mileage_task.common.dto.PageRequestDto;
 import com.habin.marketboro_mileage_task.member.dto.MileageAmountResponseDto;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.LockModeType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
@@ -26,7 +28,8 @@ public class QMemberRepositoryImpl implements QMemberRepository {
                     member.memberNm,
                     member.totalAmount
             ))
-            .from(member);
+            .from(member)
+            .setLockMode(LockModeType.PESSIMISTIC_WRITE);
 
     @Override
     @Cacheable(key = "#memberNo", value = "mileageAmount", cacheManager = "cacheManager")
@@ -36,8 +39,8 @@ public class QMemberRepositoryImpl implements QMemberRepository {
 
     @Override
     @Cacheable(key = "page.concat('_').concat(size)", value = "mileageAmountList", cacheManager = "cacheManager")
-    public SerializablePage<MileageAmountResponseDto> getMileageAmountList(Integer page, Integer size) {
-        PageRequest pageRequest = PageRequest.of(page - 1, size);
+    public SerializablePage<MileageAmountResponseDto> getMileageAmountList(PageRequestDto pageRequestDto) {
+        PageRequest pageRequest = pageRequestDto.getPageRequest();
 
         List<MileageAmountResponseDto> fetch = selectBaseQuery
                 .limit(pageRequest.getPageSize())

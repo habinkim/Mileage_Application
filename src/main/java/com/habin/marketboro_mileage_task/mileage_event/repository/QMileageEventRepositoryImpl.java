@@ -1,8 +1,8 @@
 package com.habin.marketboro_mileage_task.mileage_event.repository;
 
-import com.habin.marketboro_mileage_task.common.MileageStatus;
 import com.habin.marketboro_mileage_task.common.cache.SerializablePage;
 import com.habin.marketboro_mileage_task.common.cache.SerializablePageExecutionUtils;
+import com.habin.marketboro_mileage_task.common.dto.MileageListRequestDto;
 import com.habin.marketboro_mileage_task.common.jpa.PredicateTemplate;
 import com.habin.marketboro_mileage_task.mileage_event.dto.MileageEventListResponseDto;
 import com.querydsl.core.types.Predicate;
@@ -13,7 +13,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static com.habin.marketboro_mileage_task.member.entity.QMember.member;
 import static com.habin.marketboro_mileage_task.mileage_event.entity.QMileageEvent.mileageEvent;
@@ -25,56 +24,45 @@ public class QMileageEventRepositoryImpl implements QMileageEventRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    @Cacheable(key = "#p0.concat('_').concat(#p1).concat('_').concat(#pageRequest.pageNumber).concat('_').concat(#pageRequest.pageSize)", value = "mileageList", cacheManager = "cacheManager")
-    public SerializablePage<MileageEventListResponseDto> listWithPaging(String memberNo, MileageStatus mileageStatus, PageRequest pageRequest) {
+    @Cacheable(key = "#dto.memberNo.concat('_')" +
+            ".concat(#dto.mileageStatus).concat('_')" +
+            ".concat(#dto.page).concat('_')" +
+            ".concat(#dto.size)", value = "mileageList", cacheManager = "cacheManager")
+    public SerializablePage<MileageEventListResponseDto> listWithPaging(MileageListRequestDto dto) {
+        PageRequest pageRequest = dto.getPageRequest();
+
         Predicate predicate = PredicateTemplate.builder()
-                .eqString(member.memberNo, memberNo)
-                .eqEnum(mileageEvent.mileageStatus, mileageStatus)
+                .eqUUID(member.memberNo, dto.getMemberNo())
+                .eqEnum(mileageEvent.mileageStatus, dto.getMileageStatus())
                 .build();
 
         List<MileageEventListResponseDto> fetch = queryFactory.select(
                         fields(MileageEventListResponseDto.class,
                                 mileageEvent.id.as("mileageEventId"),
                                 mileageEvent.mileageStatus,
-                                mileageEvent.sum,
+                                mileageEvent.amount,
                                 mileageEvent.transactionDtm
                         )
                 )
                 .from(mileageEvent)
                 .join(mileageEvent.member, member)
-                .orderBy(mileageEvent.transactionDtm.desc())
                 .where(predicate)
                 .limit(pageRequest.getPageSize())
                 .offset(pageRequest.getOffset())
+                .groupBy(member.memberNo)
+                .orderBy(mileageEvent.transactionDtm.desc())
                 .fetch();
 
         JPAQuery<Long> countQuery = queryFactory
                 .select(mileageEvent.id.count())
                 .from(mileageEvent)
                 .join(mileageEvent.member, member)
+                .where(predicate)
+                .groupBy(member.memberNo)
                 .orderBy(mileageEvent.transactionDtm.desc())
                 .where(predicate);
 
         return SerializablePageExecutionUtils.getPage(fetch, pageRequest, countQuery::fetchOne);
-    }
-
-    @Override
-    public ConcurrentLinkedQueue<MileageEventListResponseDto> queue(String memberNo, MileageStatus mileageStatus) {
-        List<MileageEventListResponseDto> fetch = queryFactory.select(
-                        fields(MileageEventListResponseDto.class,
-                                mileageEvent.id.as("mileageEventId"),
-                                mileageEvent.mileageStatus,
-                                mileageEvent.sum,
-                                mileageEvent.transactionDtm
-                        )
-                )
-                .from(mileageEvent)
-                .join(mileageEvent.member, member)
-                .orderBy(mileageEvent.transactionDtm.asc())
-                .where(member.memberNo.eq(memberNo), mileageEvent.mileageStatus.eq(mileageStatus))
-                .fetch();
-
-        return new ConcurrentLinkedQueue<>(fetch);
     }
 
 }
