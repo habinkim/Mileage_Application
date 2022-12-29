@@ -22,19 +22,19 @@ public class QMemberRepositoryImpl implements QMemberRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    private final JPAQuery<MileageAmountResponseDto> selectBaseQuery = queryFactory
-            .select(fields(MileageAmountResponseDto.class,
-                    member.memberNo,
-                    member.memberNm,
-                    member.totalAmount
-            ))
-            .from(member)
-            .setLockMode(LockModeType.PESSIMISTIC_WRITE);
-
     @Override
     @Cacheable(key = "#memberNo", value = "mileageAmount", cacheManager = "cacheManager")
     public MileageAmountResponseDto getMileageAmount(String memberNo) {
-        return selectBaseQuery.where(member.memberNo.eq(UUID.fromString(memberNo))).fetchOne();
+        return queryFactory
+                .select(fields(MileageAmountResponseDto.class,
+                        member.memberNo,
+                        member.memberNm,
+                        member.totalAmount
+                ))
+                .from(member)
+                .setLockMode(LockModeType.PESSIMISTIC_WRITE)
+                .where(member.memberNo.eq(UUID.fromString(memberNo)))
+                .fetchOne();
     }
 
     @Override
@@ -42,7 +42,14 @@ public class QMemberRepositoryImpl implements QMemberRepository {
     public SerializablePage<MileageAmountResponseDto> getMileageAmountList(PageRequestDto pageRequestDto) {
         PageRequest pageRequest = pageRequestDto.getPageRequest();
 
-        List<MileageAmountResponseDto> fetch = selectBaseQuery
+        List<MileageAmountResponseDto> fetch = queryFactory
+                .select(fields(MileageAmountResponseDto.class,
+                        member.memberNo,
+                        member.memberNm,
+                        member.totalAmount
+                ))
+                .from(member)
+                .setLockMode(LockModeType.PESSIMISTIC_WRITE)
                 .limit(pageRequest.getPageSize())
                 .offset(pageRequest.getOffset())
                 .fetch();
@@ -51,6 +58,13 @@ public class QMemberRepositoryImpl implements QMemberRepository {
                 .from(member);
 
         return getPage(fetch, pageRequest, countQuery::fetchOne);
+    }
+
+    @Override
+    public void updateTotalAmount(Integer currentTotalAmount) {
+        queryFactory.update(member)
+                .set(member.totalAmount, currentTotalAmount)
+                .execute();
     }
 
 }

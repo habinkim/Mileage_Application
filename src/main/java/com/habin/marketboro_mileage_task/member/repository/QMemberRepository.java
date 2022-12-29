@@ -8,4 +8,5 @@ import com.habin.marketboro_mileage_task.member.dto.MileageAmountResponseDto;
 public interface QMemberRepository {
     MileageAmountResponseDto getMileageAmount(String memberNo);
     SerializablePage<MileageAmountResponseDto> getMileageAmountList(PageRequestDto pageRequestDto);
+    void updateTotalAmount(Integer currentTotalAmount);
 }

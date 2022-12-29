@@ -1,7 +1,7 @@
 package com.habin.marketboro_mileage_task.mileage_event.mapper;
 
 import com.habin.marketboro_mileage_task.common.mapper.EntityMapper;
-import com.habin.marketboro_mileage_task.mileage_event.dto.MileageEventRequestDto;
+import com.habin.marketboro_mileage_task.mileage_event.dto.MileageEventCreateRequestDto;
 import com.habin.marketboro_mileage_task.mileage_event.entity.MileageEvent;
 import org.mapstruct.*;
 
@@ -22,6 +22,6 @@ public interface MileageEventMapper {
 	@Mapping(target = "amount", source = "amount")
     @Mapping(target = "mileageStatus", source = "mileageStatus")
     @Mapping(target = "member", source = "memberNo")
-    MileageEvent mileageSaveDtoToEntity(MileageEventRequestDto mileageEventRequestDto);
+    MileageEvent dtoToEntity(MileageEventCreateRequestDto dto);
 
 }

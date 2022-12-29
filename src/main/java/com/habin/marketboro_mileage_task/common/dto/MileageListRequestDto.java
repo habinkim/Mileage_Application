@@ -14,7 +14,7 @@ public class MileageListRequestDto extends PageRequestDto {
     private String memberNo;
 
     @ValidEnum(enumClass = MileageStatus.class,
-            message = "거래 상태는 SAVE(\"적립\"), USED(\"사용\"), DEDUCTED(\"차감\"), EXPIRED(\"만료\") 중 하나여야 합니다.")
+            message = "거래 상태는 SAVE(\"적립\"), USE(\"사용\"), DEDUCTED(\"차감\"), EXPIRED(\"만료\") 중 하나여야 합니다.")
     private MileageStatus mileageStatus;
 
 }
