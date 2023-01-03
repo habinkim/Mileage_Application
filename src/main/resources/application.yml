@@ -1,6 +1,6 @@
 spring:
   application:
-    name: MarketBoro_Mileage_Task
+    name: Mileage_Application
   devtools:
     restart:
       enabled: true
