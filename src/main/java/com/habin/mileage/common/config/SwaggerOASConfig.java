@@ -50,8 +50,8 @@ public class SwaggerOASConfig implements WebMvcConfigurer {
 
     private Info apiInfo() {
         return new Info()
-                .title("MarketBoro Mileage Task REST API Documentation (" + now() + ")")
-                .description("MarketBoro Mileage Task REST API 명세서")
+                .title("Mileage Application REST API Documentation (" + now() + ")")
+                .description("Mileage Application REST API 명세서")
                 .version("0.5");
     }
 

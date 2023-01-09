@@ -11,7 +11,7 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
   datasource:
-    url: jdbc:mariadb://localhost:3306/MarketBoro
+    url: jdbc:mariadb://localhost:3306/Mileage
     username: root
     password: qpalzm0915
     driver-class-name: org.mariadb.jdbc.Driver
